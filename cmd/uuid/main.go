@@ -5,7 +5,7 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/exograd/go-program"
+	"github.com/galdor/go-program"
 	"github.com/galdor/go-uuid"
 )
 
