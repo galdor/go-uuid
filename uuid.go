@@ -3,10 +3,12 @@ package uuid
 import (
 	"bytes"
 	"crypto/rand"
+	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 )
 
 type UUID [16]byte
@@ -37,13 +39,23 @@ var (
 func (pId *UUID) Generate(v Version) error {
 	var id UUID
 
-	switch v {
-	case V4:
+	if v == V4 || v == V7 {
 		if _, err := rand.Read(id[:]); err != nil {
 			return fmt.Errorf("cannot read random data: %w", err)
 		}
+	}
 
+	switch v {
+	case V4:
 		id[6] = (id[6] & 0x0f) | 0x40 // Version 4
+		id[8] = (id[8] & 0x3f) | 0x80 // Variant b10
+
+	case V7:
+		var tsdata [8]byte
+		binary.BigEndian.PutUint64(tsdata[:], uint64(time.Now().UnixMilli()))
+		copy(id[0:6], tsdata[2:8])
+
+		id[6] = (id[6] & 0x0f) | 0x70 // Version 7
 		id[8] = (id[8] & 0x3f) | 0x80 // Variant b10
 
 	default:
