@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 )
@@ -127,4 +128,19 @@ func (pId *UUID) UnmarshalText(data []byte) error {
 	*pId = id
 
 	return nil
+}
+
+// json.Marshaler
+func (id UUID) MarshalJSON() ([]byte, error) {
+	return json.Marshal(id.String())
+}
+
+// json.Unmarshaler
+func (pId *UUID) UnmarshalJSON(data []byte) error {
+	var s string
+	if err := json.Unmarshal(data, &s); err != nil {
+		return ErrInvalidFormat
+	}
+
+	return pId.Parse(s)
 }
