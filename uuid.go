@@ -2,12 +2,25 @@ package uuid
 
 import (
 	"bytes"
+	"crypto/rand"
 	"encoding/hex"
 	"errors"
 	"fmt"
 )
 
 type UUID [16]byte
+
+type Version int
+
+const (
+	V1 Version = 1
+	V3 Version = 3
+	V4 Version = 4
+	V5 Version = 5
+	V6 Version = 6
+	V7 Version = 7
+	V8 Version = 8
+)
 
 var (
 	Nil = [16]byte{}
@@ -16,8 +29,38 @@ var (
 )
 
 var (
-	ErrInvalidFormat = errors.New("invalid uuid format")
+	ErrInvalidFormat      = errors.New("invalid uuid format")
+	ErrUnsupportedVersion = errors.New("unsupported uuid version")
 )
+
+func (pId *UUID) Generate(v Version) error {
+	var id UUID
+
+	switch v {
+	case V4:
+		if _, err := rand.Read(id[:]); err != nil {
+			return fmt.Errorf("cannot read random data: %w", err)
+		}
+
+		id[6] = (id[6] & 0x0f) | 0x40 // Version 4
+		id[8] = (id[8] & 0x3f) | 0x80 // Variant b10
+
+	default:
+		return ErrUnsupportedVersion
+	}
+
+	*pId = id
+
+	return nil
+}
+
+func MustGenerate(v Version) (id UUID) {
+	if err := id.Generate(v); err != nil {
+		panic(fmt.Sprintf("cannot generate uuid v%d: %v", v, err))
+	}
+
+	return
+}
 
 func (id1 UUID) Equal(id2 UUID) bool {
 	return bytes.Equal(id1.Bytes(), id2.Bytes())
