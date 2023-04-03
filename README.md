@@ -1,6 +1,7 @@
 # go-uuid
 ## Introduction
-The go-uuid library contains utilities to manipulate UUID unique identifiers.
+The go-uuid library contains utilities to manipulate UUID unique identifiers
+as defined by RFC 4122bis (draft-ietf-uuidrev-rfc4122bis).
 
 ## Usage
 Refer to the [Go package
