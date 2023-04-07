@@ -3,6 +3,7 @@ package uuid
 import (
 	"bytes"
 	"crypto/rand"
+	"database/sql/driver"
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
@@ -155,4 +156,31 @@ func (pId *UUID) UnmarshalJSON(data []byte) error {
 	}
 
 	return pId.Parse(s)
+}
+
+// database/sql/driver.Valuer
+func (id UUID) Value() (driver.Value, error) {
+	// It is tempting to return a byte slice, but database/sql is a generic
+	// SQL client. Most developers use text columns to store UUIDs so we
+	// maximize compatibility.
+	return id.String(), nil
+}
+
+// database/sql.Scanner
+func (id *UUID) Scan(value interface{}) error {
+	switch v := value.(type) {
+	case string:
+		return id.Parse(v)
+
+	case []byte:
+		if len(v) != 16 {
+			return ErrInvalidFormat
+		}
+
+		copy((*id)[:], v)
+		return nil
+
+	default:
+		return fmt.Errorf("invalid uuid value %#v", v)
+	}
 }
