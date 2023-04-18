@@ -101,6 +101,10 @@ func MustParse(s string) (id UUID) {
 	return id
 }
 
+func (id UUID) IsNil() bool {
+	return bytes.Compare(id.Bytes(), Nil.Bytes()) == 0
+}
+
 // encoding.TextMarshaler
 func (id UUID) MarshalText() ([]byte, error) {
 	data := make([]byte, 36)
