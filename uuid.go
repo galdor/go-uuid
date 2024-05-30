@@ -37,6 +37,15 @@ var (
 	ErrUnsupportedVersion = errors.New("unsupported uuid version")
 )
 
+func Generate(v Version) (UUID, error) {
+	var id UUID
+	if err := id.Generate(v); err != nil {
+		return UUID{}, err
+	}
+
+	return id, nil
+}
+
 func (pId *UUID) Generate(v Version) error {
 	var id UUID
 
@@ -187,6 +196,26 @@ func (id *UUID) Scan(value interface{}) error {
 	default:
 		return fmt.Errorf("invalid uuid value %#v", v)
 	}
+}
+
+func GenerateV7Zero(t time.Time) UUID {
+	var id UUID
+	id.GenerateV7Zero(t)
+	return id
+}
+
+func (id *UUID) GenerateV7Zero(t time.Time) {
+	// This function generates a UUID v7 with a known time field and all random
+	// fields set to zero. This is useful to filter ids by time.
+
+	*id = [16]byte{}
+
+	var tsdata [8]byte
+	binary.BigEndian.PutUint64(tsdata[:], uint64(t.UnixMilli()))
+	copy(id[0:6], tsdata[2:8])
+
+	id[6] = (id[6] & 0x0f) | 0x70 // Version 7
+	id[8] = (id[8] & 0x3f) | 0x80 // Variant b10
 }
 
 func (id UUID) V7Time() time.Time {

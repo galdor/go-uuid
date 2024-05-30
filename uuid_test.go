@@ -77,6 +77,17 @@ func TestParse(t *testing.T) {
 	}
 }
 
+func TestGenerateV7Zero(t *testing.T) {
+	idTime := time.UnixMilli(1717090333787)
+	id := GenerateV7Zero(idTime)
+
+	expectedIdString := "018fca8f-345b-7000-8000-000000000000"
+
+	if id.String() != expectedIdString {
+		t.Errorf("id is %q but should be %q", id.String(), expectedIdString)
+	}
+}
+
 func TestV7Time(t *testing.T) {
 	id := MustParse("018fca8f-345b-711a-838a-a276340388e7")
 	expectedTime := time.UnixMilli(1717090333787)
