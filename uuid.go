@@ -188,3 +188,10 @@ func (id *UUID) Scan(value interface{}) error {
 		return fmt.Errorf("invalid uuid value %#v", v)
 	}
 }
+
+func (id UUID) V7Time() time.Time {
+	// Casting from uint64 to int64 is safe, the timestamp only uses 6 bytes
+	var tsdata [8]byte
+	copy(tsdata[2:8], id[0:6])
+	return time.UnixMilli(int64(binary.BigEndian.Uint64(tsdata[:])))
+}

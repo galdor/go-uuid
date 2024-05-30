@@ -1,6 +1,9 @@
 package uuid
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 var tests = []struct {
 	s  string
@@ -71,5 +74,16 @@ func TestParse(t *testing.T) {
 		} else {
 			t.Errorf("cannot parse %q: %v", test.s, err)
 		}
+	}
+}
+
+func TestV7Time(t *testing.T) {
+	id := MustParse("018fca8f-345b-711a-838a-a276340388e7")
+	expectedTime := time.UnixMilli(1717090333787)
+
+	if idTime := id.V7Time(); idTime != expectedTime {
+		t.Errorf("time is %q but should be %q",
+			idTime.Format(time.RFC3339Nano),
+			expectedTime.Format(time.RFC3339Nano))
 	}
 }
