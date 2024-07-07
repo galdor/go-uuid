@@ -1,5 +1,10 @@
-module github.com/galdor/go-uuid
+module go.n16f.net/uuid
 
-go 1.20
+go 1.22
 
-require github.com/galdor/go-program v0.0.0-20230403162644-22adfbe9fbab
+require go.n16f.net/program v0.0.0-20240707135706-c2e994295489
+
+require (
+	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/term v0.19.0 // indirect
+)

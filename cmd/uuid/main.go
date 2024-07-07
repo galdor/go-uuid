@@ -5,8 +5,8 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/galdor/go-program"
-	"github.com/galdor/go-uuid"
+	"go.n16f.net/program"
+	"go.n16f.net/uuid"
 )
 
 func main() {

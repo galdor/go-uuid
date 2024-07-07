@@ -6,8 +6,7 @@ as defined by RFC 4122bis (draft-ietf-uuidrev-rfc4122bis).
 It currently supports UUID v4 and v7.
 
 ## Usage
-Refer to the [Go package
-documentation](https://pkg.go.dev/github.com/galdor/go-uuid) for
+Refer to the [Go package documentation](https://pkg.go.dev/go.n16f.net/uuid) for
 information about the API.
 
 See the [`uuid` program](cmd/uuid/main.go) for a practical use case.
