@@ -33,8 +33,8 @@ var (
 )
 
 var (
-	ErrInvalidFormat      = errors.New("invalid uuid format")
-	ErrUnsupportedVersion = errors.New("unsupported uuid version")
+	ErrInvalidFormat      = errors.New("invalid UUID format")
+	ErrUnsupportedVersion = errors.New("unsupported UUID version")
 )
 
 func Generate(v Version) (UUID, error) {
@@ -79,7 +79,7 @@ func (pId *UUID) Generate(v Version) error {
 
 func MustGenerate(v Version) (id UUID) {
 	if err := id.Generate(v); err != nil {
-		panic(fmt.Sprintf("cannot generate uuid v%d: %v", v, err))
+		panic(fmt.Sprintf("cannot generate UUID v%d: %v", v, err))
 	}
 
 	return
@@ -104,7 +104,7 @@ func (pId *UUID) Parse(s string) error {
 
 func MustParse(s string) (id UUID) {
 	if err := id.Parse(s); err != nil {
-		panic(fmt.Sprintf("invalid uuid %q", s))
+		panic(fmt.Sprintf("invalid UUID %q", s))
 	}
 
 	return id
@@ -194,7 +194,7 @@ func (id *UUID) Scan(value interface{}) error {
 		return nil
 
 	default:
-		return fmt.Errorf("invalid uuid value %#v", v)
+		return fmt.Errorf("invalid UUID value %#v", v)
 	}
 }
 
